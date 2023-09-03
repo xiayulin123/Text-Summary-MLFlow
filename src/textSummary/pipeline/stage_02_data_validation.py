@@ -1,30 +1,14 @@
-import os
-from textSummary.entity import DataValidationConfig
+from textSummary.config.configuration import ConfigurationManager
+from textSummary.components.data_validation import DataValiadtion
 from textSummary.logging import logger
 
-class DataValiadtion:
-    def __init__(self, config: DataValidationConfig):
-        self.config = config
 
+class DataValidationTrainingPipeline:
+    def __init__(self):
+        pass
 
-    
-    def validate_all_files_exist(self)-> bool:
-        try:
-            validation_status = None
-
-            all_files = os.listdir(os.path.join("artifacts","data_ingestion","samsum_dataset"))
-
-            for file in all_files:
-                if file not in self.config.ALL_REQUIRED_FILES:
-                    validation_status = False
-                    with open(self.config.STATUS_FILE, 'w') as f:
-                        f.write(f"Validation status: {validation_status}")
-                else:
-                    validation_status = True
-                    with open(self.config.STATUS_FILE, 'w') as f:
-                        f.write(f"Validation status: {validation_status}")
-
-            return validation_status
-        
-        except Exception as e:
-            raise e
+    def main(self):
+        config = ConfigurationManager()
+        data_validation_config = config.get_data_validation_config()
+        data_validation = DataValiadtion(config=data_validation_config)
+        data_validation.validate_all_files_exist()
